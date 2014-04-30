@@ -1,4 +1,4 @@
-#
+#--
 #            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 #                    Version 2, December 2004
 #
@@ -6,7 +6,7 @@
 #   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
-#
+#++
 
 class MkvMuxer
   attr_reader :command
@@ -28,17 +28,21 @@ class MkvMuxer
     raise Exception, 'Target mkv already exists' if !force && File.exists?(@output)
   end
 
-  def prepare(fonts = true, chapters = true)
+  def prepare(language = 'Italian', fonts = true, chapters = true)
     options = []
-    options << { opt: '-o', val: @output }
-    options << { val: @mkv }
-    options << { val: @ass }
-    options << { opt: '--no-chapters --chapters', val: chapters } if @chapters
+    options << { opt: '-o',              val: @output                        }
+    options << { opt: '--default-track', val: '0'                            }
+    options << { opt: '--track-name',    val: "0:#{language}"                }
+    options << { opt: '--language',      val: "0:#{language[0..2].downcase}" }
+    options << { opt: '--no-chapters --chapters', val: chapters              } if @chapters
 
     @fonts.each { |font|
       options << { opt: '--attachment-mime-type', val: 'application/x-truetype-font' }
-      options << { opt: '--attach-file', val: font }
+      options << { opt: '--attach-file',          val: font                          }
     } if fonts
+
+    options << { val: @ass }
+    options << { val: @mkv }
 
     @command = [].tap { |cmd|
       options.each { |option|

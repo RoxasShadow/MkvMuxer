@@ -19,7 +19,7 @@ Example
 require 'mkvmerge'
 
 mkvmuxer = MkvMuxer.new './inari'
-mkvmuxer.prepare
+mkvmuxer.prepare 'English' # the subtitle's language
 mkvmuxer.merge!
 mkvmuxer.apply_crc32!
 ```
@@ -27,5 +27,5 @@ mkvmuxer.apply_crc32!
 Or just use the built-in executable
 ```sh
 $ mkvmuxer # show the usage
-$ mkvmuxer './inari' # muxes all the files found in given folder
+$ mkvmuxer ./inari English # mux all the files found in given folder
 ```

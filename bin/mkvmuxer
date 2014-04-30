@@ -1,10 +1,16 @@
 #! /usr/bin/env ruby
 require 'mkvmuxer'
 
-abort "Usage: #{$0} <path>" if ARGV.empty?
-abort 'Folder not found.'   unless File.directory? ARGV.first
+abort "Usage: #{$0} <path> [language]" if ARGV.empty?
+abort 'Folder not found.' unless File.directory? ARGV.first
 
-mkvmuxer = MkvMuxer.new ARGV.first
-mkvmuxer.prepare
+mkvmuxer = MkvMuxer.new ARGV.shift
+
+if ARGV.any?
+  mkvmuxer.prepare ARGV.shift
+else
+  mkvmuxer.prepare
+end
+
 mkvmuxer.merge!
 mkvmuxer.apply_crc32!
